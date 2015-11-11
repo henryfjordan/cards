@@ -1,0 +1,5 @@
+%syntax-version=1.0.0
+%project=endpoint_test
+%uri=https://github.com/henryfjordan/endpoint_test
+
+one 2015-11-11T23:29:05Z Henry Jordan <henry.jordan@MACC02PP6CLG8WN> # first migration
