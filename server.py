@@ -5,6 +5,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine
 
+# Models
+# ==========================
+
 Base = declarative_base()
 
 class Author(Base):
@@ -14,20 +17,23 @@ class Author(Base):
     email = Column(String(100))
     address = Column(String(300))
 
+
 class Card(Base):
     __tablename__ = 'card'
     id = Column(Integer, primary_key=True)
     author = Column(Integer, ForeignKey('author.id'))
     message = Column(String(1000))
 
-engine = create_engine('postgresql+psycopg2://henry.jordan:fishy@localhost/endpoint')
 
-a1 = Author(name="shia")
+# SQLAlchemy boilerplate
+# ==========================
+
+engine = create_engine('postgresql+psycopg2://henry.jordan:fishy@localhost/endpoint')
 Session = sessionmaker(bind=engine)
 s = Session()
-s.add(a1)
-s.commit()
 
+# Flask Routes
+# ==========================
 
 application = Flask(__name__)
 
@@ -52,6 +58,8 @@ def contact():
          return "Something broke in the DB"
 
        return "Thank you for your message, <b>" + request.form.get('name') + "</b>. I'll get back to you as soon as I can."
+
+
 
 if __name__ == "__main__":
     application.run(host='0.0.0.0', port=8081)
