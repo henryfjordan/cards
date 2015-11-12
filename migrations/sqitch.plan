@@ -1,5 +1,6 @@
 %syntax-version=1.0.0
-%project=endpoint_test
-%uri=https://github.com/henryfjordan/endpoint_test
+%project=cards
 
-one 2015-11-11T23:29:05Z Henry Jordan <henry.jordan@MACC02PP6CLG8WN> # first migration
+create_schema 2015-11-12T20:36:13Z Henry Jordan <henry.jordan@MACC02PP6CLG8WN> # Creating postgres schema
+author_table 2015-11-12T22:07:09Z Henry Jordan <henry.jordan@MACC02PP6CLG8WN> # Adding the author table
+card_table 2015-11-12T22:14:19Z Henry Jordan <henry.jordan@MACC02PP6CLG8WN> # Adding the cards table

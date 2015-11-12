@@ -1,4 +1,4 @@
--- Verify endpoint_test:one on pg
+-- Verify cards:create_schema on pg
 
 BEGIN;
 
