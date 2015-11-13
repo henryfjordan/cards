@@ -1,7 +1,10 @@
+import json
+
 from flask import Flask, request
 
 from sqlalchemy import Column, ForeignKey, Integer, String, Text
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.serializer import loads, dumps
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine
 
@@ -28,38 +31,49 @@ class Card(Base):
 # SQLAlchemy boilerplate
 # ==========================
 
-engine = create_engine('postgresql+psycopg2://henry.jordan:fishy@localhost/endpoint')
+engine = create_engine('postgresql+psycopg2://henry.jordan:fishy@localhost/cards')
 Session = sessionmaker(bind=engine)
-s = Session()
+s = None
 
-# Flask Routes
+# Flask Boilerplate
 # ==========================
 
 application = Flask(__name__)
 
+@application.before_request
+def before_request():
+    global s # Fix me later
+    s = Session()
+
+
+@application.teardown_request
+def teardown_request(exception):
+    if(exception):
+        print(exception)
+
+    global s # fix me later
+    if s is not None:
+        s.close()
+
+
+# Flask Routes
+# ==========================
+
 @application.route('/api/')
 def index():
-   return "Welcome to my API"
+    return "Welcome to my API"
 
-@application.route('/api/contact/', methods = ['POST'])
+@application.route('/api/author/', methods=['GET'])
 def contact():
-   if request.method == 'POST':
+    author = s.query(Author).filter_by(name=request.args.get('name')).first()
+    author_dict = dict()
 
-      try:
-         db_connection = psycopg2.connect(database='postgres', user='postgres')
-         cursor = db_connection.cursor()
-         cursor.execute("INSERT INTO messages (name, email, message) VALUES (%s, %s, %s);", (request.form.get('name'), request.form.get('email'), request.form.get('message')))
-         db_connection.commit()
-         cursor.close()
-         db_connection.close()
+    for k, v in author.__dict__.items():
+        print(k)
+        if k != "_sa_instance_state":
+            author_dict[k] = v
 
-      except psycopg2.DatabaseError, e:
-         print "database error"
-         return "Something broke in the DB"
-
-       return "Thank you for your message, <b>" + request.form.get('name') + "</b>. I'll get back to you as soon as I can."
-
-
+    return str(json.dumps(author_dict))
 
 if __name__ == "__main__":
-    application.run(host='0.0.0.0', port=8081)
+    application.run(host='0.0.0.0', port=9999)
